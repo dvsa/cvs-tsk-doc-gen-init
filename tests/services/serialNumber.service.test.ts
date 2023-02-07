@@ -1,11 +1,11 @@
+import { Lambda } from 'aws-sdk';
 import { PlateSerialNumberResponse } from '../../src/models/PlateSerialNumberResponse.model';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
-import { Lambda } from 'aws-sdk';
 
 jest.mock('aws-sdk');
 
 describe('serialNumberService tests', () => {
-  //TODO: fix this test!
+  // TODO: fix this test!
   beforeAll(() => {
     ((Lambda as unknown) as jest.Mock).mockImplementation(() => ({
       invoke: jest.fn().mockImplementation((_, callback) => {
