@@ -1,6 +1,6 @@
 import { PlateReasonForIssue, Plates } from './Plates.model';
 
-export interface VehicleRecord {
+export interface NewPlateRequest {
   vrms: unknown[];
   vin: string;
   trailerId?: string;
@@ -10,6 +10,6 @@ export interface VehicleRecord {
   vtmUsername: string;
 }
 
-interface TechRecord {
+export interface TechRecord {
   plates: Plates[];
 }
