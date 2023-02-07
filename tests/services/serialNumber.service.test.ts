@@ -1,25 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Lambda } from 'aws-sdk';
-import { PlateSerialNumberResponse } from '../../src/models/PlateSerialNumberResponse.model';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 
-jest.mock('aws-sdk');
+jest.mock('aws-sdk', () => {
+  const mLambda = { invoke: jest.fn() };
+  return { Lambda: jest.fn(() => mLambda) };
+});
 
 describe('serialNumberService tests', () => {
-  // TODO: fix this test!
   beforeAll(() => {
-    ((Lambda as unknown) as jest.Mock).mockImplementation(() => ({
-      invoke: jest.fn().mockImplementation((_, callback) => {
-        callback(null, {
-          Payload: JSON.stringify({
-            plateSerialNumber: '12345',
-          } as PlateSerialNumberResponse),
-        });
-      }),
-    }));
+    const mLambda = new Lambda();
+    const mRes = {
+      Payload: {
+        plateSerialNumber: '12345',
+      },
+    };
+    (mLambda.invoke as jest.Mocked<any>).mockImplementation((_params, callback) => {
+      callback(null, mRes);
+    });
   });
 
-  it('should call the generate plate number lamdba', async () => {
+  it('should call the generate plate number lambda', async () => {
+    expect.assertions(1);
+
     const serialNumber = await getSerialNumber();
-    expect(serialNumber).toBe(12345);
+    expect(serialNumber).toBe('12345');
   });
 });
