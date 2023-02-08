@@ -1,5 +1,5 @@
 import { PlateReasonForIssue, Plates } from '../../src/models/Plates.model';
-import * as technicalRecordService from '../../src/services/technicalRecord.service';
+import { addNewPlate } from '../../src/services/technicalRecord.service';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 
 jest.mock('../../src/services/serialNumber.service');
@@ -30,7 +30,7 @@ describe('add plate tests', () => {
       reasonForCreation: PlateReasonForIssue.DESTROYED,
     };
 
-    const newTechRecord = await technicalRecordService.addNewPlate(request);
+    const newTechRecord = await addNewPlate(request);
     expect(newTechRecord.plates).toHaveLength(2);
     expect(newTechRecord.plates[1].plateIssuer).toBe('Username');
   });
@@ -49,7 +49,7 @@ describe('add plate tests', () => {
       reasonForCreation: PlateReasonForIssue.DESTROYED,
     };
 
-    const newTechRecord = await technicalRecordService.addNewPlate(request);
+    const newTechRecord = await addNewPlate(request);
     expect(newTechRecord.plates).toHaveLength(1);
     expect(newTechRecord.plates[0].plateIssuer).toBe('Username');
   });
@@ -68,7 +68,7 @@ describe('add plate tests', () => {
     };
 
     try {
-      await technicalRecordService.addNewPlate(request);
+      await addNewPlate(request);
     } catch (err: any) {
       expect(err.message).toBe('Bad Request');
     }
@@ -88,7 +88,7 @@ describe('add plate tests', () => {
     };
 
     try {
-      await technicalRecordService.addNewPlate(request);
+      await addNewPlate(request);
     } catch (err: any) {
       expect(err.message).toBe('Bad Request');
     }
@@ -107,7 +107,7 @@ describe('add plate tests', () => {
     };
 
     try {
-      await technicalRecordService.addNewPlate(request);
+      await addNewPlate(request);
     } catch (err: any) {
       expect(err.message).toBe('Bad Request');
     }

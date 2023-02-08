@@ -2,7 +2,8 @@ import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import 'source-map-support/register';
 import { NewPlateRequest } from './models/Request.model';
 import logger from './observability/logger';
-import technicalRecordService from './services/technicalRecord.service';
+import * as technicalRecordService from './services/technicalRecord.service';
+import * as sqsService from './services/sqs.service';
 
 const {
   NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE,
@@ -13,12 +14,24 @@ logger.info(
 );
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
-  logger.debug("Function triggered'.");
+  logger.info('handler: triggered');
 
-  const request = JSON.parse(event.body) as NewPlateRequest;
-  const techRecord = await technicalRecordService.addNewPlate(request);
-  await technicalRecordService.updateTechRecord(techRecord);
-  await sqsService.sendTechRecordToSQS(techRecord);
+  try {
+    const request = JSON.parse(event.body) as NewPlateRequest;
 
-  return { statusCode: 200, body: null };
+    logger.debug('handler: adding new plate to tech record');
+    const techRecord = await technicalRecordService.addNewPlate(request);
+
+    logger.debug('handler: updating tech record in DynamoDB');
+    await technicalRecordService.updateTechRecord(techRecord);
+
+    logger.debug('handler: sending tech record to SQS to generate new plate');
+    await sqsService.sendTechRecordToSQS(techRecord);
+
+    logger.info('handler: done, returning success');
+    return { statusCode: 200, body: null };
+  } catch (error) {
+    logger.error('handler: error', error);
+    return { statusCode: 500, body: null };
+  }
 };

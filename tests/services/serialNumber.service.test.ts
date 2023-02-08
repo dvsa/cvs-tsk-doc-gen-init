@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Lambda } from 'aws-sdk';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 
