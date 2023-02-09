@@ -21,17 +21,17 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
     request.techRecord.plates = currentPlates;
   } else {
     throw new Error('Bad Request');
-  };
+  }
 
   return request.techRecord;
 };
 
-export const updateTechRecord = (vehicle: Vehicle): Promise<void> => {
+export const updateTechRecord = async (vehicle: Vehicle): Promise<void> => {
   logger.debug('techRecord.service: updating tech record in DynamoDB started');
 
   return new Promise((resolve, reject) => {
     put(vehicle)
-    .then(() => resolve)
-    .catch(() => reject);
+      .then(() => resolve)
+      .catch(() => reject);
   });
 };

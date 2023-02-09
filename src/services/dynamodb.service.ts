@@ -4,7 +4,7 @@ import { Vehicle } from '../models/Vehicle.model';
 
 const config: Config = getConfig();
 
-export type DynamoKey = { id:string, sortValue?:string };
+export type DynamoKey = { id: string; sortValue?: string };
 
 export type Item = DynamoDB.DocumentClient.AttributeMap;
 
@@ -15,8 +15,10 @@ const client = new DynamoDB.DocumentClient({
   },
 });
 
-export const put = (vehicle: Vehicle) =>{
-  const { systemNumber, vin, trailerId, techRecord } = vehicle;
+export const put = (vehicle: Vehicle) => {
+  const {
+    systemNumber, vin, trailerId, techRecord,
+  } = vehicle;
 
   const query = {
     TableName: config.TECHNICAL_RECORDS_TABLE,
@@ -24,22 +26,22 @@ export const put = (vehicle: Vehicle) =>{
       systemNumber,
       vin,
     },
-    UpdateExpression: "set techRecord = :techRecord",
-    ConditionExpression: "systemNumber = :systemNumber AND vin = :vin",
+    UpdateExpression: 'set techRecord = :techRecord',
+    ConditionExpression: 'systemNumber = :systemNumber AND vin = :vin',
     ExpressionAttributeValues: {
-      ":systemNumber": systemNumber,
-      ":vin": vin,
-      ":techRecord": techRecord,
+      ':systemNumber': systemNumber,
+      ':vin': vin,
+      ':techRecord': techRecord,
     },
-    ReturnValues: "NONE",
+    ReturnValues: 'NONE',
   };
 
   if (trailerId) {
-    query.UpdateExpression += ", trailerId = :trailerId";
+    query.UpdateExpression += ', trailerId = :trailerId';
     Object.assign(query.ExpressionAttributeValues, {
-      ":trailerId": trailerId,
+      ':trailerId': trailerId,
     });
-  };
+  }
 
   return client.update(query).promise();
 };
