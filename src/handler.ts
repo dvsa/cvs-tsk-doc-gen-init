@@ -5,9 +5,7 @@ import logger from './observability/logger';
 import * as technicalRecordService from './services/technicalRecord.service';
 import * as sqsService from './services/sqs.service';
 
-const {
-  NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE,
-} = process.env;
+const { NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE } = process.env;
 
 logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
@@ -26,7 +24,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     await technicalRecordService.updateTechRecord(techRecord);
 
     logger.debug('handler: sending tech record to SQS to generate new plate');
-    await sqsService.sendTechRecordToSQS(techRecord);
+    await sqsService.sendTechRecordToSQS(techRecord, request);
 
     logger.info('handler: done, returning success');
     return { statusCode: 200, body: null };

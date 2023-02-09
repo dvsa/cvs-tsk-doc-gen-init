@@ -1,15 +1,7 @@
-import { PlateReasonForIssue, Plates } from './Plates.model';
+import { PlateReasonForIssue } from './Plates.model';
+import { Vehicle } from './Vehicle.model';
 
-export interface NewPlateRequest {
-  vrms: unknown[];
-  vin: string;
-  trailerId?: string;
-  systemNumber: string;
-  techRecord: TechRecord;
+export interface NewPlateRequest extends Vehicle {
   reasonForCreation: PlateReasonForIssue;
   vtmUsername: string;
-}
-
-export interface TechRecord {
-  plates: Plates[];
 }
