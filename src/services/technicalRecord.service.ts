@@ -27,6 +27,6 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
 };
 
 export const updateTechRecord = (vehicle: Vehicle): Promise<void> => {
-    logger.debug('techRecord.service: updating tech record in DynamoDB started');
-    return put(vehicle);
+  logger.debug('techRecord.service: updating tech record in DynamoDB started');
+  return put(vehicle);
 };

@@ -131,7 +131,7 @@ describe('update tech record tests', () => {
       vin: '12345',
       systemNumber: '123456',
       vrms: [],
-      techRecord: undefined
+      techRecord: undefined,
     };
 
     await updateTechRecord(vehicle);
