@@ -1,6 +1,6 @@
 import { PlateReasonForIssue } from '../../src/models/Plates.model';
 import { NewPlateRequest } from '../../src/models/Request.model';
-import { DocumentType } from '../../src/models/SqsPayloadRequest.model';
+import { DocumentName } from '../../src/models/SqsPayloadRequest.model';
 import { formatPayload } from '../../src/services/sqs.service';
 
 describe('test sqs service', () => {
@@ -36,7 +36,7 @@ describe('test sqs service', () => {
 
       const expectedRes = {
         vehicle,
-        documentType: DocumentType.VTG6_VTG7,
+        documentName: DocumentName.VTG6_VTG7,
       };
       expect(res).toEqual(expectedRes);
     });
@@ -55,7 +55,7 @@ describe('test sqs service', () => {
 
       const expectedRes = {
         vehicle,
-        documentType: DocumentType.VTG6_VTG7,
+        documentName: DocumentName.VTG6_VTG7,
       };
       expect(res).toEqual(expectedRes);
     });

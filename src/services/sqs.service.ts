@@ -1,6 +1,6 @@
 import { SQS } from 'aws-sdk';
 import { NewPlateRequest } from '../models/Request.model';
-import { DocumentType, SQSRequestBody } from '../models/SqsPayloadRequest.model';
+import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
 import { TechRecord, Vehicle } from '../models/Vehicle.model';
 import logger from '../observability/logger';
 
@@ -33,6 +33,6 @@ export const formatPayload = (techRecord: TechRecord, request: NewPlateRequest):
 
   return {
     vehicle,
-    documentType: DocumentType.VTG6_VTG7,
+    documentName: DocumentName.VTG6_VTG7,
   };
 };
