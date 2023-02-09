@@ -24,7 +24,7 @@ export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGa
     const techRecord = await technicalRecordService.addNewPlate(request);
 
     logger.debug('handler: updating tech record in DynamoDB');
-    await technicalRecordService.updateTechRecord(request as Vehicle);
+    await technicalRecordService.updateTechRecord({... request as Vehicle, techRecord});
 
     logger.debug('handler: sending tech record to SQS to generate new plate');
     await sqsService.sendTechRecordToSQS(techRecord, request);

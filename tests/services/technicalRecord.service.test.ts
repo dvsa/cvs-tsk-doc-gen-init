@@ -1,8 +1,11 @@
 import { PlateReasonForIssue, Plates } from '../../src/models/Plates.model';
-import { addNewPlate } from '../../src/services/technicalRecord.service';
+import { addNewPlate, updateTechRecord } from '../../src/services/technicalRecord.service';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
+import * as dynamodbService from '../../src/services/dynamodb.service';
+import { Vehicle } from '../../src/models/Vehicle.model';
 
 jest.mock('../../src/services/serialNumber.service');
+// jest.mock('../../src/services/dynamodb.service');
 
 describe('add plate tests', () => {
   beforeAll(() => {
@@ -111,5 +114,27 @@ describe('add plate tests', () => {
     } catch (err: any) {
       expect(err.message).toBe('Bad Request');
     }
+  });
+});
+
+describe('update tech record tests', () => {
+  const putSpy = jest.spyOn(dynamodbService, 'put');
+
+  beforeAll(() => {
+    (dynamodbService.put as jest.Mock).mockResolvedValue(null);
+  });
+
+  it('should update tech record', async () => {
+    expect.assertions(1);
+
+    const vehicle: Vehicle = {
+      vin: '12345',
+      systemNumber: '123456',
+      vrms: [],
+      techRecord: undefined
+    };
+
+    await updateTechRecord(vehicle);
+    expect(putSpy).toHaveBeenCalled();
   });
 });

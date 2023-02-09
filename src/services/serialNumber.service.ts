@@ -10,9 +10,8 @@ const lambda = new Lambda({
 });
 
 export const getSerialNumber = async (): Promise<string> =>
-
-  // call the serial number service (which is another lambda function)
   new Promise((resolve, reject) => {
+    // call the serial number service (which is another lambda function)
     const params = {
       FunctionName: config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME,
       InvocationType: 'Event', // Event = async

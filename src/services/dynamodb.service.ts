@@ -1,6 +1,7 @@
 import { DynamoDB } from 'aws-sdk';
 import { getConfig, Config } from '../config';
 import { Vehicle } from '../models/Vehicle.model';
+import logger from '../observability/logger';
 
 const config: Config = getConfig();
 
@@ -15,7 +16,7 @@ const client = new DynamoDB.DocumentClient({
   },
 });
 
-export const put = (vehicle: Vehicle) => {
+export const put = async (vehicle: Vehicle): Promise<void> => {
   const {
     systemNumber, vin, trailerId, techRecord,
   } = vehicle;
@@ -37,11 +38,17 @@ export const put = (vehicle: Vehicle) => {
   };
 
   if (trailerId) {
+    logger.info(`found trailerId: ${trailerId} - adding to update expression`);
     query.UpdateExpression += ', trailerId = :trailerId';
     Object.assign(query.ExpressionAttributeValues, {
       ':trailerId': trailerId,
     });
   }
 
-  return client.update(query).promise();
+  try {
+    await client.update(query).promise();
+  } catch (err: unknown) {
+    logger.error(err);
+    throw new Error(err as string);
+  }
 };
