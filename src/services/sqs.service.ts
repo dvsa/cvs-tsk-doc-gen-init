@@ -3,6 +3,9 @@ import { NewPlateRequest } from '../models/Request.model';
 import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
 import { TechRecord, Vehicle } from '../models/Vehicle.model';
 import logger from '../observability/logger';
+import { getConfig, Config } from '../config';
+
+const config: Config = getConfig();
 
 export const sendTechRecordToSQS = async (techRecord: TechRecord, request: NewPlateRequest): Promise<void> => {
   logger.info('Send tech record to SQS');
@@ -11,7 +14,7 @@ export const sendTechRecordToSQS = async (techRecord: TechRecord, request: NewPl
 
   const params = {
     MessageBody: JSON.stringify(formatPayload(techRecord, request)),
-    QueueUrl: process.env.DOC_GEN_SQS_QUEUE,
+    QueueUrl: config.DOC_GEN_SQS_QUEUE_URL,
   };
 
   try {

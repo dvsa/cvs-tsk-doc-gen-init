@@ -4,6 +4,7 @@ import { NewPlateRequest } from './models/Request.model';
 import logger from './observability/logger';
 import * as technicalRecordService from './services/technicalRecord.service';
 import * as sqsService from './services/sqs.service';
+import { Vehicle } from './models/Vehicle.model';
 
 const { NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE } = process.env;
 
@@ -11,7 +12,7 @@ logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
 );
 
-export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGatewayProxyResult> => {
   logger.info('handler: triggered');
 
   try {
@@ -21,7 +22,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     const techRecord = await technicalRecordService.addNewPlate(request);
 
     logger.debug('handler: updating tech record in DynamoDB');
-    await technicalRecordService.updateTechRecord(techRecord);
+    await technicalRecordService.updateTechRecord(request as Vehicle);
 
     logger.debug('handler: sending tech record to SQS to generate new plate');
     await sqsService.sendTechRecordToSQS(techRecord, request);

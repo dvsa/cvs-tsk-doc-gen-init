@@ -1,30 +1,31 @@
 import 'dotenv/config';
 
 export interface Config {
-  DYNAMO_URL: string
-  DYNAMO_REGION: string,
-  SQS_REGION: string,
+  GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME: string, // generatePlateSerialNumber
+  GENERATE_PLATE_SERIAL_NUMBER_PATH: string,          // /plateSerialNo,
   TECHNICAL_RECORDS_TABLE: string,
-  REFERENCE_INDEX: string,
+  TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: string,      // SysNumIndex
+  DOC_GEN_SQS_QUEUE_URL: string,
 }
 
 export const getConfig = (): Config => {
   [
-    'DYNAMO_URL',
-    'DYNAMO_REGION',
-    'SQS_REGION',
+    'GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME',
+    'GENERATE_PLATE_SERIAL_NUMBER_PATH',
     'TECHNICAL_RECORDS_TABLE',
+    'TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX',
+    'DOC_GEN_SQS_QUEUE',
   ].forEach((envVar) => {
     if (!process.env[`${envVar}`]) {
       throw new Error(`Environment variable ${envVar} seems to be missing.`);
     }
   });
   return {
-    DYNAMO_URL: process.env.DYNAMO_URL,
-    DYNAMO_REGION: process.env.DYNAMO_REGION,
-    SQS_REGION: process.env.SQS_REGION,
+    GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME: process.env.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME,
+    GENERATE_PLATE_SERIAL_NUMBER_PATH: process.env.GENERATE_PLATE_SERIAL_NUMBER_PATH,
     TECHNICAL_RECORDS_TABLE: process.env.TECHNICAL_RECORDS_TABLE,
-    REFERENCE_INDEX: process.env.REFERENCE_INDEX,
+    TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: process.env.TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX,
+    DOC_GEN_SQS_QUEUE_URL: process.env.DOC_GEN_SQS_QUEUE_URL,
   };
 };
 
