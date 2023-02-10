@@ -5,7 +5,6 @@ import * as dynamodbService from '../../src/services/dynamodb.service';
 import { Vehicle } from '../../src/models/Vehicle.model';
 
 jest.mock('../../src/services/serialNumber.service');
-// jest.mock('../../src/services/dynamodb.service');
 
 describe('add plate tests', () => {
   beforeAll(() => {
