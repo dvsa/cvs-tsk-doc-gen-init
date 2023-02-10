@@ -6,6 +6,7 @@ import logger from '../observability/logger';
 const config: Config = getConfig();
 
 const lambda = new Lambda({
+  apiVersion: '2015-03-31',
   region: process.env.AWS_PROVIDER_REGION,
 });
 
@@ -26,16 +27,16 @@ export const getSerialNumber = async (): Promise<string> => {
   return lambda.invoke(params)
     .promise()
     .then((response: PromiseResult<Lambda.Types.InvocationResponse, AWSError>) => {
-      logger.info('Gen plate serial number lambda function returned: ${JSON.stringify(response)}');
+      logger.info(`Gen plate serial number lambda function returned: ${JSON.stringify(response)}`);
       const payload = JSON.parse(response.Payload as string);
-      const body = JSON.parse(payload.body);
-      if (body.statusCode !== 200) {
-        throw new Error(`Gen plate serial number lambda return status: ${body.statusCode}`);
+      if (payload.statusCode !== 200) {
+        throw new Error(`Gen plate serial number lambda return status: ${payload.statusCode}`);
       }
+      const body = JSON.parse(payload.body as string);
       return body.plateSerialNumber;
     })
     .catch((error) => {
-      logger.error('Error calling gen plate serial number lambda function: ${error}');
+      logger.error(`Error calling gen plate serial number lambda function: ${error}`);
       throw error;
     });
 };

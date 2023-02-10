@@ -10,11 +10,11 @@ describe('serialNumberService tests', () => {
   beforeAll(() => {
     const mLambda = new Lambda();
     const mBody = JSON.stringify({
-      statusCode: 200,
       plateSerialNumber: '12345',
     });
     const mRes = {
       Payload: JSON.stringify({
+        statusCode: 200,
         body: mBody,
       }),
     };
