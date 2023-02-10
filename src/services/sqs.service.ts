@@ -28,7 +28,7 @@ export const sendTechRecordToSQS = async (techRecord: TechRecord, request: NewPl
 export const formatPayload = (techRecord: TechRecord, request: NewPlateRequest): SQSRequestBody => {
   const vehicle: Vehicle = {
     vin: request.vin,
-    vrms: request.vrms,
+    primaryVrm: request.primaryVrm,
     systemNumber: request.systemNumber,
     techRecord,
     trailerId: request.trailerId,

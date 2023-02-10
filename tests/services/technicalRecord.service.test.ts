@@ -24,7 +24,7 @@ describe('add plate tests', () => {
     technicalRecord.plates.push(plate);
 
     const request = {
-      vrms: [],
+      primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
       techRecord: technicalRecord,
@@ -43,7 +43,7 @@ describe('add plate tests', () => {
     const technicalRecord = { plates: [] as Plates[] };
 
     const request = {
-      vrms: [],
+      primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
       techRecord: technicalRecord,
@@ -61,7 +61,7 @@ describe('add plate tests', () => {
     const technicalRecord = { plates: [] as Plates[] };
 
     const request = {
-      vrms: [],
+      primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
       techRecord: technicalRecord,
@@ -81,7 +81,7 @@ describe('add plate tests', () => {
     const technicalRecord = { plates: [] as Plates[] };
 
     const request = {
-      vrms: [],
+      primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
       techRecord: technicalRecord,
@@ -100,7 +100,7 @@ describe('add plate tests', () => {
     expect.assertions(1);
 
     const request = {
-      vrms: [],
+      primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
       techRecord: null,
@@ -129,7 +129,7 @@ describe('update tech record tests', () => {
     const vehicle: Vehicle = {
       vin: '12345',
       systemNumber: '123456',
-      vrms: [],
+      primaryVrm: '',
       techRecord: undefined,
     };
 

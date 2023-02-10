@@ -2,7 +2,7 @@ import { Plates } from './Plates.model';
 
 export interface Vehicle {
   vin: string;
-  vrms: unknown[];
+  primaryVrm: string;
   systemNumber: string;
   trailerId?: string;
   techRecord: TechRecord;

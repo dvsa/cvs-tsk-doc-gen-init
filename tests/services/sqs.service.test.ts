@@ -18,7 +18,7 @@ describe('test sqs service', () => {
 
     const request: NewPlateRequest = {
       vin: '1234',
-      vrms: ['vrm1'],
+      primaryVrm: 'vrm1',
       systemNumber: '1234',
       reasonForCreation: PlateReasonForIssue.DESTROYED,
       vtmUsername: 'User',
@@ -29,7 +29,7 @@ describe('test sqs service', () => {
 
       const vehicle = {
         vin: '1234',
-        vrms: ['vrm1'],
+        primaryVrm: 'vrm1',
         systemNumber: '1234',
         techRecord,
       };
@@ -47,7 +47,7 @@ describe('test sqs service', () => {
 
       const vehicle = {
         vin: '1234',
-        vrms: ['vrm1'],
+        primaryVrm: 'vrm1',
         systemNumber: '1234',
         trailerId: '12345',
         techRecord,
