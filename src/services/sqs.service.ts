@@ -14,7 +14,7 @@ export const sendTechRecordToSQS = async (techRecord: TechRecord, request: NewPl
 
   const params = {
     MessageBody: JSON.stringify(formatPayload(techRecord, request)),
-    QueueUrl: config.DOC_GEN_SQS_QUEUE_URL,
+    QueueUrl: config.DOC_GEN_SQS_QUEUE,
   };
 
   try {

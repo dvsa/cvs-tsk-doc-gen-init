@@ -3,7 +3,7 @@ export interface Config {
   GENERATE_PLATE_SERIAL_NUMBER_PATH: string; // /plateSerialNo,
   TECHNICAL_RECORDS_TABLE: string;
   TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: string; // SysNumIndex
-  DOC_GEN_SQS_QUEUE_URL: string;
+  DOC_GEN_SQS_QUEUE: string;
 }
 
 export const getConfig = (): Config => {
@@ -23,7 +23,7 @@ export const getConfig = (): Config => {
     GENERATE_PLATE_SERIAL_NUMBER_PATH: process.env.GENERATE_PLATE_SERIAL_NUMBER_PATH,
     TECHNICAL_RECORDS_TABLE: process.env.TECHNICAL_RECORDS_TABLE,
     TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: process.env.TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX,
-    DOC_GEN_SQS_QUEUE_URL: process.env.DOC_GEN_SQS_QUEUE_URL,
+    DOC_GEN_SQS_QUEUE: process.env.DOC_GEN_SQS_QUEUE,
   };
 };
 
