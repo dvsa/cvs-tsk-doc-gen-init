@@ -9,14 +9,16 @@ jest.mock('aws-sdk', () => {
 describe('serialNumberService tests', () => {
   beforeAll(() => {
     const mLambda = new Lambda();
-    const mRes = {
-      Payload: {
-        plateSerialNumber: '12345',
-      },
-    };
-    (mLambda.invoke as jest.Mocked<any>).mockImplementation((_params, callback) => {
-      callback(null, mRes);
+    const mBody = JSON.stringify({
+      statusCode: 200,
+      plateSerialNumber: '12345',
     });
+    const mRes = {
+      Payload: JSON.stringify({
+        body: mBody,
+      }),
+    };
+    (mLambda.invoke as jest.Mocked<any>).mockImplementation(() => ({ promise: jest.fn().mockResolvedValue(mRes) }));
   });
 
   it('should call the generate plate number lambda', async () => {

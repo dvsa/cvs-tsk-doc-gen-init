@@ -16,7 +16,7 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
       plateIssuer: request.vtmUsername,
     };
 
-    // TODO: Validate new Plate and throw if invalid
+    validate(newPlate);
 
     currentPlates.push(newPlate);
 
@@ -26,6 +26,28 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
   }
 
   return request.techRecord;
+};
+
+export const validate = (plate: Plates): void => {
+  if (!plate) {
+    throw new Error('Missing all of the plate information');
+  }
+
+  if (!plate.plateSerialNumber) {
+    throw new Error('Missing plate serial number');
+  }
+
+  if (!plate.plateIssueDate) {
+    throw new Error('Missing plate issue date');
+  }
+
+  if (!plate.plateReasonForIssue) {
+    throw new Error('Missing plate reason for issue');
+  }
+
+  if (!plate.plateIssuer) {
+    throw new Error('Missing plate issuer');
+  }
 };
 
 export const updateTechRecord = (vehicle: Vehicle): Promise<void> => {

@@ -1,7 +1,7 @@
-import { Lambda } from 'aws-sdk';
+import { AWSError, Lambda } from 'aws-sdk';
+import { PromiseResult } from 'aws-sdk/lib/request';
 import { getConfig, Config } from '../config';
 import logger from '../observability/logger';
-import { PlateSerialNumberResponse } from '../models/PlateSerialNumberResponse.model';
 
 const config: Config = getConfig();
 
@@ -9,11 +9,11 @@ const lambda = new Lambda({
   region: process.env.AWS_PROVIDER_REGION,
 });
 
-export const getSerialNumber = async (): Promise<string> => new Promise((resolve, reject) => {
+export const getSerialNumber = async (): Promise<string> => {
   // call the serial number service (which is another lambda function)
   const params = {
     FunctionName: config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME,
-    InvocationType: 'Event', // Event = async
+    InvocationType: 'RequestResponse',
     Payload: JSON.stringify({
       httpMethod: 'POST',
       path: config.GENERATE_PLATE_SERIAL_NUMBER_PATH,
@@ -23,13 +23,19 @@ export const getSerialNumber = async (): Promise<string> => new Promise((resolve
 
   logger.info(`Calling gen plate serial number lambda function (${config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME})...`);
 
-  lambda.invoke(params, (error, data) => {
-    if (error) {
-      logger.error('Calling gen plate serial number lambda function: ERROR: ', error);
-      reject(error);
-    } else {
-      logger.info('Calling gen plate serial number lambda function: success: ', data);
-      resolve((data.Payload as PlateSerialNumberResponse).plateSerialNumber);
-    }
-  });
-});
+  return lambda.invoke(params)
+    .promise()
+    .then((response: PromiseResult<Lambda.Types.InvocationResponse, AWSError>) => {
+      logger.info('Gen plate serial number lambda function returned: ${JSON.stringify(response)}');
+      const payload = JSON.parse(response.Payload as string);
+      const body = JSON.parse(payload.body);
+      if (body.statusCode !== 200) {
+        throw new Error(`Gen plate serial number lambda return status: ${body.statusCode}`);
+      }
+      return body.plateSerialNumber;
+    })
+    .catch((error) => {
+      logger.error('Error calling gen plate serial number lambda function: ${error}');
+      throw error;
+    });
+};

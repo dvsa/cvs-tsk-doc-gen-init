@@ -6,3 +6,5 @@ node_modules
 **/*.js
 .build,
 jest.config.ts
+
+src/services/serialNumber.service.ts

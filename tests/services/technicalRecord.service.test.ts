@@ -1,5 +1,5 @@
 import { PlateReasonForIssue, Plates } from '../../src/models/Plates.model';
-import { addNewPlate, updateTechRecord } from '../../src/services/technicalRecord.service';
+import { addNewPlate, updateTechRecord, validate } from '../../src/services/technicalRecord.service';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 import * as dynamodbService from '../../src/services/dynamodb.service';
 import { Vehicle } from '../../src/models/Vehicle.model';
@@ -112,6 +112,55 @@ describe('add plate tests', () => {
       await addNewPlate(request);
     } catch (err: any) {
       expect(err.message).toBe('Bad Request');
+    }
+  });
+});
+
+describe('validate new plate tests', () => {
+  const plate = {
+    plateSerialNumber: '12345',
+    plateIssueDate: new Date().toISOString(),
+    plateReasonForIssue: PlateReasonForIssue.FREE_REPLACEMENT,
+    plateIssuer: 'Issuer Name',
+  };
+
+  it('should error when not given plate', () => {
+    try {
+      validate(null as Plates);
+    } catch (err: any) {
+      expect(err.message).toBe('Missing all of the plate information');
+    }
+  });
+
+  it('should error when not given plate serial number', () => {
+    try {
+      validate({ ...plate, plateSerialNumber: null } as Plates);
+    } catch (err: any) {
+      expect(err.message).toBe('Missing plate serial number');
+    }
+  });
+
+  it('should error when not given plate issue date', () => {
+    try {
+      validate({ ...plate, plateIssueDate: null } as Plates);
+    } catch (err: any) {
+      expect(err.message).toBe('Missing plate issue date');
+    }
+  });
+
+  it('should error when not given plate reason for issue', () => {
+    try {
+      validate({ ...plate, plateReasonForIssue: null } as Plates);
+    } catch (err: any) {
+      expect(err.message).toBe('Missing plate reason for issue');
+    }
+  });
+
+  it('should error when not given plate issuer', () => {
+    try {
+      validate({ ...plate, plateIssuer: null } as Plates);
+    } catch (err: any) {
+      expect(err.message).toBe('Missing plate issuer');
     }
   });
 });
