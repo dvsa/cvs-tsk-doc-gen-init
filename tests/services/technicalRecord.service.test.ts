@@ -16,7 +16,7 @@ describe('add plate tests', () => {
 
     const plate = {
       plateSerialNumber: '12345',
-      plateIssueDate: new Date(),
+      plateIssueDate: new Date().toISOString(),
       plateReasonForIssue: PlateReasonForIssue.FREE_REPLACEMENT,
       plateIssuer: 'Issuer Name',
     };

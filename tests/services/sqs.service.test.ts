@@ -8,14 +8,14 @@ describe('test sqs service', () => {
     const techRecord = {
       plates: [
         {
-          plateSerialNumber: '12344321',
-          plateIssueDate: new Date(),
+          plateSerialNumber: '1234',
+          plateIssueDate: new Date().toISOString(),
           plateReasonForIssue: PlateReasonForIssue.DESTROYED,
           plateIssuer: 'User',
         },
         {
           plateSerialNumber: '1234',
-          plateIssueDate: new Date(new Date().setDate(new Date().getDate() - 1)),
+          plateIssueDate: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(),
           plateReasonForIssue: PlateReasonForIssue.DESTROYED,
           plateIssuer: 'User',
         },
