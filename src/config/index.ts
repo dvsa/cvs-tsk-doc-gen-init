@@ -1,11 +1,9 @@
-import 'dotenv/config';
-
 export interface Config {
-  GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME: string, // generatePlateSerialNumber
-  GENERATE_PLATE_SERIAL_NUMBER_PATH: string,          // /plateSerialNo,
-  TECHNICAL_RECORDS_TABLE: string,
-  TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: string,      // SysNumIndex
-  DOC_GEN_SQS_QUEUE_URL: string,
+  GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME: string; // generatePlateSerialNumber
+  GENERATE_PLATE_SERIAL_NUMBER_PATH: string; // /plateSerialNo,
+  TECHNICAL_RECORDS_TABLE: string;
+  TECHNICAL_RECORDS_SYSTEM_NUMBER_INDEX: string; // SysNumIndex
+  DOC_GEN_SQS_QUEUE_URL: string;
 }
 
 export const getConfig = (): Config => {
@@ -28,7 +26,6 @@ export const getConfig = (): Config => {
     DOC_GEN_SQS_QUEUE_URL: process.env.DOC_GEN_SQS_QUEUE_URL,
   };
 };
-
 
 export default {
   logger: {
