@@ -8,8 +8,14 @@ describe('test sqs service', () => {
     const techRecord = {
       plates: [
         {
-          plateSerialNumber: '1234',
+          plateSerialNumber: '12344321',
           plateIssueDate: new Date(),
+          plateReasonForIssue: PlateReasonForIssue.DESTROYED,
+          plateIssuer: 'User',
+        },
+        {
+          plateSerialNumber: '1234',
+          plateIssueDate: new Date(new Date().setDate(new Date().getDate() - 1)),
           plateReasonForIssue: PlateReasonForIssue.DESTROYED,
           plateIssuer: 'User',
         },
@@ -35,8 +41,16 @@ describe('test sqs service', () => {
         techRecord,
       };
 
+      const plate = {
+        plateSerialNumber: '12344321',
+        plateIssueDate: techRecord.plates[0].plateIssueDate,
+        plateReasonForIssue: PlateReasonForIssue.DESTROYED,
+        plateIssuer: 'User',
+      };
+
       const expectedRes = {
         vehicle,
+        plate,
         documentName: DocumentName.MINISTRY,
       };
       expect(res).toEqual(expectedRes);
@@ -55,8 +69,16 @@ describe('test sqs service', () => {
         techRecord: { ...techRecord, vehicleType: 'trl' },
       };
 
+      const plate = {
+        plateSerialNumber: '12344321',
+        plateIssueDate: techRecord.plates[0].plateIssueDate,
+        plateReasonForIssue: PlateReasonForIssue.DESTROYED,
+        plateIssuer: 'User',
+      };
+
       const expectedRes = {
         vehicle,
+        plate,
         documentName: DocumentName.MINISTRY_TRL,
       };
       expect(res).toEqual(expectedRes);

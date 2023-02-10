@@ -34,9 +34,14 @@ export const formatPayload = (techRecord: TechRecord, request: NewPlateRequest):
     trailerId: request.trailerId,
   };
 
+  const plate = techRecord.plates.sort(
+    (a, b) => new Date(b.plateIssueDate).getTime() - new Date(a.plateIssueDate).getTime(),
+  )[0];
+
   return {
     vehicle,
     // TODO: Document to be determined by URL params (next sprint)
+    plate,
     documentName: techRecord.vehicleType === VehicleType.Trailer ? DocumentName.MINISTRY_TRL : DocumentName.MINISTRY,
   };
 };

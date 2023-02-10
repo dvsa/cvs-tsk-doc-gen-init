@@ -1,7 +1,9 @@
+import { Plates } from './Plates.model';
 import { Vehicle } from './Vehicle.model';
 
 export interface SQSRequestBody {
   vehicle: Vehicle;
+  plate: Plates;
   documentName: DocumentName;
 }
 
