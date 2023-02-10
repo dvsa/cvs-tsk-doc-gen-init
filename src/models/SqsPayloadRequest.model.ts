@@ -5,6 +5,7 @@ export interface SQSRequestBody {
   documentName: DocumentName;
 }
 
-export enum DocumentName {
-  VTG6_VTG7 = 'VTG6_VTG7',
+export const enum DocumentName {
+  MINISTRY = 'VTG6_VTG7',
+  MINISTRY_TRL = 'VTG6_VTG7_TRL',
 }

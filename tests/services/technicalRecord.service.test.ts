@@ -20,7 +20,7 @@ describe('add plate tests', () => {
       plateReasonForIssue: PlateReasonForIssue.FREE_REPLACEMENT,
       plateIssuer: 'Issuer Name',
     };
-    const technicalRecord = { plates: [] as Plates[] };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
     technicalRecord.plates.push(plate);
 
     const request = {
@@ -40,7 +40,7 @@ describe('add plate tests', () => {
   it('should add a new plate when passed an empty array', async () => {
     expect.assertions(2);
 
-    const technicalRecord = { plates: [] as Plates[] };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
 
     const request = {
       primaryVrm: '',
@@ -58,7 +58,7 @@ describe('add plate tests', () => {
 
   it('should error when not given user name', async () => {
     expect.assertions(1);
-    const technicalRecord = { plates: [] as Plates[] };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
 
     const request = {
       primaryVrm: '',
@@ -78,7 +78,7 @@ describe('add plate tests', () => {
 
   it('should error when not given reason for creation', async () => {
     expect.assertions(1);
-    const technicalRecord = { plates: [] as Plates[] };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
 
     const request = {
       primaryVrm: '',

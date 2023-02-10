@@ -10,4 +10,9 @@ export interface Vehicle {
 
 export interface TechRecord {
   plates: Plates[];
+  vehicleType: string;
+}
+
+export enum VehicleType {
+  Trailer = 'trl',
 }

@@ -1,7 +1,7 @@
 import { SQS } from 'aws-sdk';
 import { NewPlateRequest } from '../models/Request.model';
 import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
-import { TechRecord, Vehicle } from '../models/Vehicle.model';
+import { TechRecord, Vehicle, VehicleType } from '../models/Vehicle.model';
 import logger from '../observability/logger';
 import { getConfig, Config } from '../config';
 
@@ -36,6 +36,7 @@ export const formatPayload = (techRecord: TechRecord, request: NewPlateRequest):
 
   return {
     vehicle,
-    documentName: DocumentName.VTG6_VTG7,
+    // TODO: Document to be determined by URL params (next sprint)
+    documentName: techRecord.vehicleType === VehicleType.Trailer ? DocumentName.MINISTRY_TRL : DocumentName.MINISTRY,
   };
 };

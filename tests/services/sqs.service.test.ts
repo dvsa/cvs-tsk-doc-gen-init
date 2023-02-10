@@ -14,6 +14,7 @@ describe('test sqs service', () => {
           plateIssuer: 'User',
         },
       ],
+      vehicleType: 'hgv',
     };
 
     const request: NewPlateRequest = {
@@ -36,13 +37,14 @@ describe('test sqs service', () => {
 
       const expectedRes = {
         vehicle,
-        documentName: DocumentName.VTG6_VTG7,
+        documentName: DocumentName.MINISTRY,
       };
       expect(res).toEqual(expectedRes);
     });
 
-    it('should let me format message with a trailerID', () => {
+    it('should let me format message with a trailerID and send correct documentName', () => {
       request.trailerId = '12345';
+      request.techRecord.vehicleType = 'trl';
       const res = formatPayload(techRecord, request);
 
       const vehicle = {
@@ -50,12 +52,12 @@ describe('test sqs service', () => {
         primaryVrm: 'vrm1',
         systemNumber: '1234',
         trailerId: '12345',
-        techRecord,
+        techRecord: { ...techRecord, vehicleType: 'trl' },
       };
 
       const expectedRes = {
         vehicle,
-        documentName: DocumentName.VTG6_VTG7,
+        documentName: DocumentName.MINISTRY_TRL,
       };
       expect(res).toEqual(expectedRes);
     });
