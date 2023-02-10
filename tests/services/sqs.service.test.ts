@@ -9,7 +9,7 @@ describe('test sqs service', () => {
       plates: [
         {
           plateSerialNumber: '1234',
-          plateIssueDate: new Date(),
+          plateIssueDate: new Date().toISOString(),
           plateReasonForIssue: PlateReasonForIssue.DESTROYED,
           plateIssuer: 'User',
         },

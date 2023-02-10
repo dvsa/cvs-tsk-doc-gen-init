@@ -11,10 +11,12 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
 
     const newPlate: Plates = {
       plateSerialNumber: await getSerialNumber(),
-      plateIssueDate: new Date(),
+      plateIssueDate: new Date().toISOString(),
       plateReasonForIssue: request.reasonForCreation,
       plateIssuer: request.vtmUsername,
     };
+
+    // TODO: Validate new Plate and throw if invalid
 
     currentPlates.push(newPlate);
 

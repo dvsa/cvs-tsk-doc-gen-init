@@ -1,6 +1,6 @@
 export interface Plates {
   plateSerialNumber?: string;
-  plateIssueDate?: Date;
+  plateIssueDate?: string;
   plateReasonForIssue?: PlateReasonForIssue;
   plateIssuer?: string;
 }
