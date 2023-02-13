@@ -22,21 +22,33 @@ export const getSerialNumber = async (): Promise<string> => {
     LogType: 'Tail',
   };
 
-  logger.info(`Calling gen plate serial number lambda function (${config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME})...`);
+  logger.info(
+    `Calling gen plate serial number lambda function (${config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME})...`,
+  );
 
-  return lambda.invoke(params)
+  return lambda
+    .invoke(params)
     .promise()
     .then((response: PromiseResult<Lambda.Types.InvocationResponse, AWSError>) => {
       logger.info(`Gen plate serial number lambda function returned: ${JSON.stringify(response)}`);
-      const payload = JSON.parse(response.Payload as string);
+      const payload = JSON.parse(response.Payload as string) as PayloadResponse;
       if (payload.statusCode !== 200) {
         throw new Error(`Gen plate serial number lambda return status: ${payload.statusCode}`);
       }
-      const body = JSON.parse(payload.body as string);
+      const body = JSON.parse(payload.body) as Body;
       return body.plateSerialNumber;
     })
     .catch((error) => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       logger.error(`Error calling gen plate serial number lambda function: ${error}`);
       throw error;
     });
+};
+type PayloadResponse = {
+  statusCode: number;
+  body: string;
+};
+
+type Body = {
+  plateSerialNumber: string;
 };
