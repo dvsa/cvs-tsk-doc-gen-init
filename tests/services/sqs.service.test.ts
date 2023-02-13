@@ -1,11 +1,12 @@
 import { PlateReasonForIssue } from '../../src/models/Plates.model';
 import { NewPlateRequest } from '../../src/models/Request.model';
 import { DocumentName } from '../../src/models/SqsPayloadRequest.model';
+import { StatusCode, TechRecord } from '../../src/models/Vehicle.model';
 import { formatPayload } from '../../src/services/sqs.service';
 
 describe('test sqs service', () => {
   describe('test payload format', () => {
-    const techRecord = {
+    const techRecord: TechRecord = {
       plates: [
         {
           plateSerialNumber: '12344321',
@@ -21,6 +22,7 @@ describe('test sqs service', () => {
         },
       ],
       vehicleType: 'hgv',
+      statusCode: StatusCode.CURRENT,
     };
 
     const request: NewPlateRequest = {
@@ -29,7 +31,7 @@ describe('test sqs service', () => {
       systemNumber: '1234',
       reasonForCreation: PlateReasonForIssue.DESTROYED,
       vtmUsername: 'User',
-      techRecord,
+      techRecord: [techRecord] as TechRecord[],
     };
     it('should let me format message without a trailerID', () => {
       const res = formatPayload(techRecord, request);
@@ -58,7 +60,7 @@ describe('test sqs service', () => {
 
     it('should let me format message with a trailerID and send correct documentName', () => {
       request.trailerId = '12345';
-      request.techRecord.vehicleType = 'trl';
+      request.techRecord[0].vehicleType = 'trl';
       const res = formatPayload(techRecord, request);
 
       const vehicle = {

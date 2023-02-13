@@ -2,7 +2,7 @@ import { PlateReasonForIssue, Plates } from '../../src/models/Plates.model';
 import { addNewPlate, updateTechRecord, validate } from '../../src/services/technicalRecord.service';
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 import * as dynamodbService from '../../src/services/dynamodb.service';
-import { Vehicle } from '../../src/models/Vehicle.model';
+import { StatusCode, TechRecord, Vehicle } from '../../src/models/Vehicle.model';
 
 jest.mock('../../src/services/serialNumber.service');
 
@@ -20,40 +20,40 @@ describe('add plate tests', () => {
       plateReasonForIssue: PlateReasonForIssue.FREE_REPLACEMENT,
       plateIssuer: 'Issuer Name',
     };
-    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv', statusCode: StatusCode.CURRENT };
     technicalRecord.plates.push(plate);
 
     const request = {
       primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
-      techRecord: technicalRecord,
+      techRecord: [technicalRecord] as TechRecord[],
       vtmUsername: 'Username',
       reasonForCreation: PlateReasonForIssue.DESTROYED,
     };
 
     const newTechRecord = await addNewPlate(request);
-    expect(newTechRecord.plates).toHaveLength(2);
-    expect(newTechRecord.plates[1].plateIssuer).toBe('Username');
+    expect(newTechRecord[0].plates).toHaveLength(2);
+    expect(newTechRecord[0].plates[1].plateIssuer).toBe('Username');
   });
 
   it('should add a new plate when passed an empty array', async () => {
     expect.assertions(2);
 
-    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv', statusCode: StatusCode.CURRENT };
 
     const request = {
       primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
-      techRecord: technicalRecord,
+      techRecord: [technicalRecord] as TechRecord[],
       vtmUsername: 'Username',
       reasonForCreation: PlateReasonForIssue.DESTROYED,
     };
 
     const newTechRecord = await addNewPlate(request);
-    expect(newTechRecord.plates).toHaveLength(1);
-    expect(newTechRecord.plates[0].plateIssuer).toBe('Username');
+    expect(newTechRecord[0].plates).toHaveLength(1);
+    expect(newTechRecord[0].plates[0].plateIssuer).toBe('Username');
   });
 
   it('should error when not given user name', async () => {
@@ -64,7 +64,7 @@ describe('add plate tests', () => {
       primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
-      techRecord: technicalRecord,
+      techRecord: [technicalRecord] as TechRecord[],
       vtmUsername: null,
       reasonForCreation: PlateReasonForIssue.DESTROYED,
     };
@@ -78,13 +78,13 @@ describe('add plate tests', () => {
 
   it('should error when not given reason for creation', async () => {
     expect.assertions(1);
-    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv' };
+    const technicalRecord = { plates: [] as Plates[], vehicleType: 'hgv', statusCode: StatusCode.CURRENT };
 
     const request = {
       primaryVrm: '',
       vin: '12345',
       systemNumber: '123456',
-      techRecord: technicalRecord,
+      techRecord: [technicalRecord] as TechRecord[],
       vtmUsername: 'Username',
       reasonForCreation: null,
     };

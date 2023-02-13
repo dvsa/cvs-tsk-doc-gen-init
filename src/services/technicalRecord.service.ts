@@ -5,9 +5,18 @@ import { TechRecord, Vehicle } from '../models/Vehicle.model';
 import { put } from './dynamodb.service';
 import logger from '../observability/logger';
 
-export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord> => {
-  if (request.reasonForCreation && request.vtmUsername && request.techRecord) {
-    const currentPlates = request.techRecord.plates ?? [];
+export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord[]> => {
+  const techRecords = request.techRecord as TechRecord[];
+
+  if (request.reasonForCreation && request.vtmUsername && techRecords) {
+    // find the current record then add the plate to it
+    const currentTechRecordIndex = techRecords.findIndex((techRecord) => techRecord.statusCode === 'current');
+
+    if (currentTechRecordIndex < 0) {
+      throw new Error('No current record found');
+    }
+
+    const currentPlates = techRecords[currentTechRecordIndex].plates ?? [];
 
     const newPlate: Plates = {
       plateSerialNumber: await getSerialNumber(),
@@ -20,12 +29,12 @@ export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord>
 
     currentPlates.push(newPlate);
 
-    request.techRecord.plates = currentPlates;
+    techRecords[currentTechRecordIndex].plates = currentPlates;
   } else {
     throw new Error('Bad Request');
   }
 
-  return request.techRecord;
+  return techRecords;
 };
 
 export const validate = (plate: Plates): void => {
