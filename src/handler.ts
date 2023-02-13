@@ -14,6 +14,12 @@ logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
 );
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
+  'X-Content-Type-Options': 'nosniff',
+};
+
 export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGatewayProxyResult> => {
   logger.info('handler: triggered');
 
@@ -30,9 +36,13 @@ export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGa
     await sqsService.sendTechRecordToSQS(techRecord, request);
 
     logger.info('handler: done, returning success');
-    return { statusCode: 200, body: null };
+    return {
+      headers,
+      statusCode: 200,
+      body: null,
+    };
   } catch (error) {
     logger.error('handler: error', error);
-    return { statusCode: 500, body: null };
+    return { headers, statusCode: 500, body: null };
   }
 };
