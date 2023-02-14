@@ -6,24 +6,24 @@ import { put } from './dynamodb.service';
 import logger from '../observability/logger';
 
 export const addNewPlate = async (request: NewPlateRequest): Promise<TechRecord> => {
-  if (request.reasonForCreation && request.vtmUsername && request.techRecord) {
-    const currentPlates = request.techRecord.plates ?? [];
-
-    const newPlate: Plates = {
-      plateSerialNumber: await getSerialNumber(),
-      plateIssueDate: new Date().toISOString(),
-      plateReasonForIssue: request.reasonForCreation,
-      plateIssuer: request.vtmUsername,
-    };
-
-    validate(newPlate);
-
-    currentPlates.push(newPlate);
-
-    request.techRecord.plates = currentPlates;
-  } else {
+  if (!request.reasonForCreation || !request.vtmUsername || !request.techRecord) {
     throw new Error('Bad Request');
   }
+
+  const currentPlates = request.techRecord.plates ?? [];
+
+  const newPlate: Plates = {
+    plateSerialNumber: await getSerialNumber(),
+    plateIssueDate: new Date().toISOString(),
+    plateReasonForIssue: request.reasonForCreation,
+    plateIssuer: request.vtmUsername,
+  };
+
+  validate(newPlate);
+
+  currentPlates.push(newPlate);
+
+  request.techRecord.plates = currentPlates;
 
   return request.techRecord;
 };
