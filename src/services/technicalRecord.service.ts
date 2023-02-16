@@ -60,7 +60,7 @@ export const validatePlate = (plate: Plates): void => {
   }
 };
 
-export const addNewLetter = async (request: NewLetterRequest): Promise<TechRecord[]> => {
+export const addNewLetter = (request: NewLetterRequest): TechRecord[] => {
   if (!request.vtmUsername || !request.techRecord) {
     throw new Error('Bad Request');
   }

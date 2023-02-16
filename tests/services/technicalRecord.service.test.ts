@@ -129,7 +129,7 @@ describe('add letter tests', () => {
     (getSerialNumber as jest.Mock).mockResolvedValue('12345');
   });
 
-  it('should add a new letter', async () => {
+  it('should add a new letter', () => {
     expect.assertions(2);
 
     const technicalRecord = { vehicleType: 'hgv', statusCode: StatusCode.CURRENT };
@@ -144,7 +144,7 @@ describe('add letter tests', () => {
       paragraphID: ParagraphID.PARAGRAPH_3,
     };
 
-    const newTechRecord = await addNewLetter(request);
+    const newTechRecord = addNewLetter(request);
     expect(newTechRecord[0].letterOfAuth).toBeDefined();
     expect(newTechRecord[0].letterOfAuth.paragraphID).toBe(ParagraphID.PARAGRAPH_3);
   });

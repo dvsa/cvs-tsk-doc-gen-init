@@ -6,7 +6,9 @@ import * as technicalRecordService from './services/technicalRecord.service';
 import * as sqsService from './services/sqs.service';
 import { StatusCode, Vehicle } from './models/Vehicle.model';
 
-const { NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE } = process.env;
+const {
+  NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE,
+} = process.env;
 
 logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
@@ -69,7 +71,7 @@ export const handleLetterRequest = async (event: APIGatewayEvent, type = 'letter
     const request = JSON.parse(event.body) as NewLetterRequest;
 
     logger.debug('handler: adding new letter to tech record');
-    const techRecords = await technicalRecordService.addNewLetter(request);
+    const techRecords = technicalRecordService.addNewLetter(request);
 
     logger.debug('handler: updating tech record in DynamoDB');
     await technicalRecordService.updateTechRecord({ ...(request as Vehicle), techRecord: techRecords });

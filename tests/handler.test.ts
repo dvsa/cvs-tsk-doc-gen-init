@@ -64,7 +64,7 @@ jest.mock('../src/services/dynamodb.service');
 describe('handler tests', () => {
   beforeAll(() => {
     (addNewPlate as jest.Mock).mockResolvedValue(techRecords);
-    (addNewLetter as jest.Mock).mockResolvedValue(techRecords);
+    (addNewLetter as jest.Mock).mockReturnValue(techRecords);
   });
 
   it('should allow me to call the handler successfully with a letter', async () => {
