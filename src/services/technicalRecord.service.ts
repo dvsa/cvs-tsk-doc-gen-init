@@ -76,7 +76,7 @@ export const addNewLetter = (request: NewLetterRequest): TechRecord[] => {
 
   const newLetter: Letter = {
     letterType: request.letterType,
-    paragraphID: request.paragraphID,
+    paragraphId: request.paragraphId,
     letterIssuer: request.vtmUsername,
     letterDateRequested: new Date().toISOString(),
   };
@@ -97,7 +97,7 @@ export const validateLetter = (letter: Letter): void => {
     throw new Error('Missing letter type');
   }
 
-  if (!letter.paragraphID) {
+  if (!letter.paragraphId) {
     throw new Error('Missing letter paragraph ID');
   }
 

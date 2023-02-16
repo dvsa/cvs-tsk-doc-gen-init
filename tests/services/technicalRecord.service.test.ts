@@ -9,7 +9,7 @@ import {
 import { getSerialNumber } from '../../src/services/serialNumber.service';
 import * as dynamodbService from '../../src/services/dynamodb.service';
 import { StatusCode, TechRecord, Vehicle } from '../../src/models/Vehicle.model';
-import { Letter, LetterType, ParagraphID } from '../../src/models/Letter.model';
+import { Letter, LetterType, ParagraphId } from '../../src/models/Letter.model';
 import { NewLetterRequest } from '../../src/models/Request.model';
 
 jest.mock('../../src/services/serialNumber.service');
@@ -140,13 +140,13 @@ describe('add letter tests', () => {
       systemNumber: '123456',
       techRecord: [technicalRecord] as TechRecord[],
       vtmUsername: 'Username',
-      letterType: LetterType.TRL_AUTHORISATION,
-      paragraphID: ParagraphID.PARAGRAPH_3,
+      letterType: LetterType.TRL_ACCEPTANCE,
+      paragraphId: ParagraphId.PARAGRAPH_3,
     };
 
     const newTechRecord = addNewLetter(request);
     expect(newTechRecord[0].letterOfAuth).toBeDefined();
-    expect(newTechRecord[0].letterOfAuth.paragraphID).toBe(ParagraphID.PARAGRAPH_3);
+    expect(newTechRecord[0].letterOfAuth.paragraphId).toBe(ParagraphId.PARAGRAPH_3);
   });
 });
 
@@ -201,8 +201,8 @@ describe('validate new plate tests', () => {
 
 describe('validate new letter tests', () => {
   const letter = {
-    letterType: LetterType.TRL_AUTHORISATION,
-    paragraphID: ParagraphID.PARAGRAPH_3,
+    letterType: LetterType.TRL_ACCEPTANCE,
+    paragraphId: ParagraphId.PARAGRAPH_3,
     letterIssuer: 'user',
     letterDateRequested: new Date().toISOString(),
   };
@@ -225,7 +225,7 @@ describe('validate new letter tests', () => {
 
   it('should error when not given letter paragraph ID', () => {
     try {
-      validateLetter({ ...letter, paragraphID: null } as Letter);
+      validateLetter({ ...letter, paragraphId: null } as Letter);
     } catch (err: any) {
       expect(err.message).toBe('Missing letter paragraph ID');
     }

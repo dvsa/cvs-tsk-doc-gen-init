@@ -1,4 +1,4 @@
-import { LetterType, ParagraphID } from '../../src/models/Letter.model';
+import { LetterType, ParagraphId } from '../../src/models/Letter.model';
 import { PlateReasonForIssue } from '../../src/models/Plates.model';
 import { NewLetterRequest, NewPlateRequest } from '../../src/models/Request.model';
 import { DocumentName } from '../../src/models/SqsPayloadRequest.model';
@@ -90,8 +90,8 @@ describe('test sqs service', () => {
   describe('test letter payload format', () => {
     const techRecord: TechRecord = {
       letterOfAuth: {
-        letterType: LetterType.TRL_AUTHORISATION,
-        paragraphID: ParagraphID.PARAGRAPH_3,
+        letterType: LetterType.TRL_ACCEPTANCE,
+        paragraphId: ParagraphId.PARAGRAPH_3,
         letterIssuer: 'user',
         letterDateRequested: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString(),
       },
@@ -105,8 +105,8 @@ describe('test sqs service', () => {
       systemNumber: '1234',
       vtmUsername: 'User',
       techRecord: [techRecord] as TechRecord[],
-      letterType: LetterType.TRL_AUTHORISATION,
-      paragraphID: ParagraphID.PARAGRAPH_3,
+      letterType: LetterType.TRL_ACCEPTANCE,
+      paragraphId: ParagraphId.PARAGRAPH_3,
     };
     it('should let me format message without a trailerID', () => {
       const res = formatLetterPayload(techRecord, request);
@@ -119,8 +119,8 @@ describe('test sqs service', () => {
       };
 
       const letter = {
-        letterType: LetterType.TRL_AUTHORISATION,
-        paragraphID: ParagraphID.PARAGRAPH_3,
+        letterType: LetterType.TRL_ACCEPTANCE,
+        paragraphId: ParagraphId.PARAGRAPH_3,
         letterIssuer: 'user',
         letterDateRequested: techRecord.letterOfAuth.letterDateRequested,
       };

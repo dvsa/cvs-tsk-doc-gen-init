@@ -1,4 +1,4 @@
-import { LetterType, ParagraphID } from './Letter.model';
+import { LetterType, ParagraphId } from './Letter.model';
 import { PlateReasonForIssue } from './Plates.model';
 import { Vehicle } from './Vehicle.model';
 
@@ -9,5 +9,5 @@ export interface NewPlateRequest extends Vehicle {
 export interface NewLetterRequest extends Vehicle {
   vtmUsername: string;
   letterType: LetterType;
-  paragraphID: ParagraphID;
+  paragraphId: ParagraphId;
 }

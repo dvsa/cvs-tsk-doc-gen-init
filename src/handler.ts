@@ -25,15 +25,15 @@ export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGa
 
   const requestType = event.queryStringParameters?.type;
 
-  if (requestType === 'plate') return handlePlateRequest(event);
+  if (requestType === 'plate') return handlePlateRequest(event, requestType);
 
-  if (requestType === 'letter') return handleLetterRequest(event);
+  if (requestType === 'letter') return handleLetterRequest(event, requestType);
 
   logger.error('handler: no correct query param given');
   return { headers, statusCode: 500, body: null };
 };
 
-export const handlePlateRequest = async (event: APIGatewayEvent, type = 'plate') => {
+export const handlePlateRequest = async (event: APIGatewayEvent, requestType: string) => {
   logger.info('handler: plate request');
 
   try {
@@ -49,7 +49,7 @@ export const handlePlateRequest = async (event: APIGatewayEvent, type = 'plate')
     await sqsService.sendTechRecordToSQS(
       techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT),
       request,
-      type,
+      requestType,
     );
 
     logger.info('handler: done, returning success');
@@ -64,7 +64,7 @@ export const handlePlateRequest = async (event: APIGatewayEvent, type = 'plate')
   }
 };
 
-export const handleLetterRequest = async (event: APIGatewayEvent, type = 'letter') => {
+export const handleLetterRequest = async (event: APIGatewayEvent, requestType: string) => {
   logger.info('handler: letter request');
 
   try {
@@ -80,7 +80,7 @@ export const handleLetterRequest = async (event: APIGatewayEvent, type = 'letter
     await sqsService.sendTechRecordToSQS(
       techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT),
       request,
-      type,
+      requestType,
     );
 
     logger.info('handler: done, returning success');
