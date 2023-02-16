@@ -1,6 +1,6 @@
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import 'source-map-support/register';
-import { NewPlateRequest } from './models/Request.model';
+import { NewLetterRequest, NewPlateRequest } from './models/Request.model';
 import logger from './observability/logger';
 import * as technicalRecordService from './services/technicalRecord.service';
 import * as sqsService from './services/sqs.service';
@@ -23,6 +23,19 @@ const headers = {
 export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGatewayProxyResult> => {
   logger.info('handler: triggered');
 
+  const requestType = event.queryStringParameters?.type;
+
+  if (requestType === 'plate') return handlePlateRequest(event, requestType);
+
+  if (requestType === 'letter') return handleLetterRequest(event, requestType);
+
+  logger.error('handler: no correct query param given');
+  return { headers, statusCode: 500, body: null };
+};
+
+export const handlePlateRequest = async (event: APIGatewayEvent, requestType: string) => {
+  logger.info('handler: plate request');
+
   try {
     const request = JSON.parse(event.body) as NewPlateRequest;
 
@@ -30,10 +43,45 @@ export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGa
     const techRecords = await technicalRecordService.addNewPlate(request);
 
     logger.debug('handler: updating tech record in DynamoDB');
-    await technicalRecordService.updateTechRecord({ ...request as Vehicle, techRecord: techRecords });
+    await technicalRecordService.updateTechRecord({ ...(request as Vehicle), techRecord: techRecords });
 
     logger.debug('handler: sending tech record to SQS to generate new plate');
-    await sqsService.sendTechRecordToSQS(techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT), request);
+    await sqsService.sendTechRecordToSQS(
+      techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT),
+      request,
+      requestType,
+    );
+
+    logger.info('handler: done, returning success');
+    return {
+      headers,
+      statusCode: 200,
+      body: null,
+    };
+  } catch (error) {
+    logger.error('handler: ERROR', error);
+    return { headers, statusCode: 500, body: null };
+  }
+};
+
+export const handleLetterRequest = async (event: APIGatewayEvent, requestType: string) => {
+  logger.info('handler: letter request');
+
+  try {
+    const request = JSON.parse(event.body) as NewLetterRequest;
+
+    logger.debug('handler: adding new letter to tech record');
+    const techRecords = technicalRecordService.addNewLetter(request);
+
+    logger.debug('handler: updating tech record in DynamoDB');
+    await technicalRecordService.updateTechRecord({ ...(request as Vehicle), techRecord: techRecords });
+
+    logger.debug('handler: sending tech record to SQS to generate new letter');
+    await sqsService.sendTechRecordToSQS(
+      techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT),
+      request,
+      requestType,
+    );
 
     logger.info('handler: done, returning success');
     return {
