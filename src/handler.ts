@@ -6,9 +6,7 @@ import * as technicalRecordService from './services/technicalRecord.service';
 import * as sqsService from './services/sqs.service';
 import { StatusCode, Vehicle } from './models/Vehicle.model';
 
-const {
-  NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE,
-} = process.env;
+const { NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE } = process.env;
 
 logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
@@ -23,7 +21,7 @@ const headers = {
 export const handler = async (event: APIGatewayEvent, _: Context): Promise<APIGatewayProxyResult> => {
   logger.info('handler: triggered');
 
-  const requestType = event.queryStringParameters?.type;
+  const requestType = event.pathParameters?.type;
 
   if (requestType === 'plate') return handlePlateRequest(event, requestType);
 

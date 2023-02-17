@@ -33,7 +33,7 @@ const goodEvent: APIGatewayEvent = {
   httpMethod: 'POST',
   isBase64Encoded: false,
   path: 'path',
-  pathParameters: null,
+  pathParameters: { type: 'letter' },
   queryStringParameters: null,
   multiValueQueryStringParameters: null,
   stageVariables: null,
@@ -48,8 +48,8 @@ const badEvent: APIGatewayEvent = {
   httpMethod: 'POST',
   isBase64Encoded: false,
   path: 'path',
-  pathParameters: null,
-  queryStringParameters: { type: 'letter' },
+  pathParameters: { type: 'letter' },
+  queryStringParameters: null,
   multiValueQueryStringParameters: null,
   stageVariables: null,
   requestContext: null,
@@ -69,14 +69,14 @@ describe('handler tests', () => {
 
   it('should allow me to call the handler successfully with a letter', async () => {
     expect.assertions(1);
-    goodEvent.queryStringParameters = { type: 'letter' };
+    goodEvent.pathParameters = { type: 'letter' };
     const res = await handler(goodEvent, null);
     expect(res.statusCode).toBe(200);
   });
 
   it('should allow me to call the handler successfully with a plate', async () => {
     expect.assertions(1);
-    goodEvent.queryStringParameters = { type: 'plate' };
+    goodEvent.pathParameters = { type: 'plate' };
     const res = await handler(goodEvent, null);
     expect(res.statusCode).toBe(200);
   });
@@ -89,7 +89,7 @@ describe('handler tests', () => {
 
   it('should allow me to call the handler with an error if no query params are given', async () => {
     expect.assertions(1);
-    badEvent.queryStringParameters = null;
+    badEvent.pathParameters = null;
     const res = await handler(badEvent, null);
     expect(res.statusCode).toBe(500);
   });
