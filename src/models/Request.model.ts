@@ -9,7 +9,6 @@ export interface RequestBase {
 
 export interface NewPlateRequest extends RequestBase, Vehicle {
   reasonForCreation: PlateReasonForIssue;
-
 }
 export interface NewLetterRequest extends RequestBase, Vehicle {
   letterType: LetterType;
