@@ -32,6 +32,7 @@ describe('test sqs service', () => {
       systemNumber: '1234',
       reasonForCreation: PlateReasonForIssue.DESTROYED,
       vtmUsername: 'User',
+      recipientEmailAddress: 'customer@example.com',
       techRecord: [techRecord] as TechRecord[],
     };
     it('should let me format message without a trailerID', () => {
@@ -104,6 +105,7 @@ describe('test sqs service', () => {
       primaryVrm: 'vrm1',
       systemNumber: '1234',
       vtmUsername: 'User',
+      recipientEmailAddress: 'customer@example.com',
       techRecord: [techRecord] as TechRecord[],
       letterType: LetterType.TRL_ACCEPTANCE,
       paragraphId: ParagraphId.PARAGRAPH_3,
