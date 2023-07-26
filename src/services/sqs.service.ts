@@ -1,7 +1,7 @@
 import { SQS } from 'aws-sdk';
 import { NewLetterRequest, NewPlateRequest } from '../models/Request.model';
 import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
-import { TechRecord, Vehicle, VehicleType } from '../models/Vehicle.model';
+import { TechRecord, Vehicle } from '../models/Vehicle.model';
 import logger from '../observability/logger';
 import { getConfig, Config } from '../config';
 
