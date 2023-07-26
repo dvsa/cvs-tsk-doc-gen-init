@@ -1,9 +1,9 @@
 import { SQS } from 'aws-sdk';
+import { Config, getConfig } from '../config';
 import { NewLetterRequest, NewPlateRequest } from '../models/Request.model';
 import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
 import { TechRecord, Vehicle } from '../models/Vehicle.model';
 import logger from '../observability/logger';
-import { getConfig, Config } from '../config';
 
 const config: Config = getConfig();
 
@@ -13,6 +13,8 @@ export const sendTechRecordToSQS = async (
   type: string,
 ): Promise<void> => {
   logger.info('Send tech record to SQS');
+
+  logger.info(`tech record before added to sqs ${JSON.stringify(techRecord)}`);
 
   const sqs = new SQS({ apiVersion: '2012-11-05' });
 

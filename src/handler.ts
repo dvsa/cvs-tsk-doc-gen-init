@@ -1,14 +1,12 @@
 import { APIGatewayEvent, APIGatewayProxyResult, Context } from 'aws-lambda';
 import 'source-map-support/register';
 import { NewLetterRequest, NewPlateRequest } from './models/Request.model';
-import logger from './observability/logger';
-import * as technicalRecordService from './services/technicalRecord.service';
-import * as sqsService from './services/sqs.service';
 import { StatusCode, Vehicle } from './models/Vehicle.model';
+import logger from './observability/logger';
+import * as sqsService from './services/sqs.service';
+import * as technicalRecordService from './services/technicalRecord.service';
 
-const {
-  NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE,
-} = process.env;
+const { NODE_ENV, SERVICE, AWS_PROVIDER_REGION, AWS_PROVIDER_STAGE } = process.env;
 
 logger.info(
   `\nRunning Service:\n '${SERVICE}'\n mode: ${NODE_ENV}\n stage: '${AWS_PROVIDER_STAGE}'\n region: '${AWS_PROVIDER_REGION}'\n\n`,
@@ -72,6 +70,12 @@ export const handleLetterRequest = async (event: APIGatewayEvent, requestType: s
 
     logger.debug('handler: adding new letter to tech record');
     const techRecords = technicalRecordService.addNewLetter(request);
+
+    logger.info(
+      `tech records after plate added ${JSON.stringify(
+        techRecords.find((techRecord) => techRecord.statusCode === StatusCode.CURRENT),
+      )}`,
+    );
 
     logger.debug('handler: updating tech record in DynamoDB');
     await technicalRecordService.updateTechRecord({ ...(request as Vehicle), techRecord: techRecords });
