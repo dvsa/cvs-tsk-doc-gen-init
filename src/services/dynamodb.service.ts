@@ -1,4 +1,5 @@
-import { DynamoDB } from 'aws-sdk';
+import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBClient, ReturnValue } from '@aws-sdk/client-dynamodb';
 import { getConfig, Config } from '../config';
 import { Vehicle } from '../models/Vehicle.model';
 import logger from '../observability/logger';
@@ -7,14 +8,16 @@ const config: Config = getConfig();
 
 export type DynamoKey = { id: string; sortValue?: string };
 
-export type Item = DynamoDB.DocumentClient.AttributeMap;
+export type Item = Record<string, any>;
 
-const client = new DynamoDB.DocumentClient({
-  maxRetries: 3,
-  httpOptions: {
-    timeout: 5000,
-  },
-});
+// const client = DynamoDBDocument.from(new DynamoDB({
+//   maxRetries: 3,
+//   httpOptions: {
+//     timeout: 5000,
+//   },
+// }));
+
+const client = new DynamoDBClient();
 
 export const put = async (vehicle: Vehicle): Promise<void> => {
   const {
@@ -34,7 +37,7 @@ export const put = async (vehicle: Vehicle): Promise<void> => {
       ':vin': vin,
       ':techRecord': techRecord,
     },
-    ReturnValues: 'NONE',
+    ReturnValues: ReturnValue.NONE,
   };
 
   if (trailerId) {
@@ -46,7 +49,7 @@ export const put = async (vehicle: Vehicle): Promise<void> => {
   }
 
   try {
-    await client.update(query).promise();
+    await client.send(new UpdateCommand(query));
   } catch (err: unknown) {
     logger.error(err);
     throw new Error(err as string);

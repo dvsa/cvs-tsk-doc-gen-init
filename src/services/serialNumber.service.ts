@@ -1,12 +1,15 @@
-import { AWSError, Lambda } from 'aws-sdk';
-import { PromiseResult } from 'aws-sdk/lib/request';
+import {
+  InvocationType,
+  Lambda,
+  LogType,
+} from '@aws-sdk/client-lambda';
+
 import { getConfig, Config } from '../config';
 import logger from '../observability/logger';
 
 const config: Config = getConfig();
 
 const lambda = new Lambda({
-  apiVersion: '2015-03-31',
   region: process.env.AWS_PROVIDER_REGION,
 });
 
@@ -14,12 +17,12 @@ export const getSerialNumber = async (): Promise<string> => {
   // call the serial number service (which is another lambda function)
   const params = {
     FunctionName: config.GENERATE_PLATE_SERIAL_NUMBER_FUNCTION_NAME,
-    InvocationType: 'RequestResponse',
+    InvocationType: InvocationType.RequestResponse,
     Payload: JSON.stringify({
       httpMethod: 'POST',
       path: config.GENERATE_PLATE_SERIAL_NUMBER_PATH,
     }),
-    LogType: 'Tail',
+    LogType: LogType.Tail,
   };
 
   logger.info(
@@ -28,8 +31,7 @@ export const getSerialNumber = async (): Promise<string> => {
 
   return lambda
     .invoke(params)
-    .promise()
-    .then((response: PromiseResult<Lambda.Types.InvocationResponse, AWSError>) => {
+    .then((response: any) => {
       logger.info(`Gen plate serial number lambda function returned: ${JSON.stringify(response)}`);
       const payload = JSON.parse(response.Payload as string) as PayloadResponse;
       if (payload.statusCode !== 200) {

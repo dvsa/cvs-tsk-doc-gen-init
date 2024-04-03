@@ -1,4 +1,4 @@
-import { SQS } from 'aws-sdk';
+import { SQS } from '@aws-sdk/client-sqs';
 import { NewLetterRequest, NewPlateRequest } from '../models/Request.model';
 import { DocumentName, SQSRequestBody } from '../models/SqsPayloadRequest.model';
 import { TechRecord, Vehicle } from '../models/Vehicle.model';
@@ -14,7 +14,11 @@ export const sendTechRecordToSQS = async (
 ): Promise<void> => {
   logger.info('Send tech record to SQS');
 
-  const sqs = new SQS({ apiVersion: '2012-11-05' });
+  const sqs = new SQS({
+    // The key apiVersion is no longer supported in v3, and can be removed.
+    // @deprecated The client uses the "latest" apiVersion.
+    apiVersion: '2012-11-05',
+  });
 
   const params = {
     MessageBody:
@@ -25,7 +29,7 @@ export const sendTechRecordToSQS = async (
   };
 
   try {
-    await sqs.sendMessage(params).promise();
+    await sqs.sendMessage(params);
   } catch (err: unknown) {
     logger.error(err);
     throw new Error(err as string);
